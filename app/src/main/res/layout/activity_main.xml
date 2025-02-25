@@ -38,11 +38,13 @@
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
+        android:id="@+id/include_main_guide_layout"
+        layout="@layout/guide_main" />
+
+    <include
         android:id="@+id/include_layout"
         layout="@layout/guide" />
 
-    <include
-        android:id="@+id/include_main_guide_layout"
-        layout="@layout/guide_main" />
+
 
 </RelativeLayout>

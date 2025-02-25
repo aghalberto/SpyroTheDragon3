@@ -6,12 +6,18 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.window.SplashScreen;
 
 import androidx.annotation.NonNull;
@@ -28,6 +34,10 @@ import dam.pmdm.spyrothedragon.databinding.GuideMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int step = 1;
+    private int WIDTH ;
+    private int HEIGHT;
+    private Float DESPLAZAMIENTO;
     private ActivityMainBinding binding;
     private GuideBinding guideBinding;
     private GuideMainBinding guideMainBinding;
@@ -45,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         //Instanciamos guideBinding
         guideBinding = binding.includeLayout;
         guideMainBinding = binding.includeMainGuideLayout;
+
         setContentView(binding.getRoot());
 
 
@@ -72,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         //Cargamos las preferencias; importante para needToStartGuide
         cargarPreferencias();
 
+        //Calculamos medidas de la pantall
+        calcularMedidas();
         //Inicializamos la guía
         //PARA AHORRAR TIEMPO ponemos el needToStartGuide a true siempre
         needToStartGuide = true;
@@ -82,6 +95,22 @@ public class MainActivity extends AppCompatActivity {
         //initializeGuide();
 
 
+    }
+
+    /**
+     * Calcula medidas de la pantalla para mover cosas
+     * Use WindowMetrics instead.
+     * Obtain a WindowMetrics instance by calling WindowManager. getCurrentWindowMetrics(),
+     *  then call WindowMetrics. getBounds() to get the dimensions of the application window.
+     */
+    private void calcularMedidas() {
+        Point size = new Point();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        WIDTH = size.x;
+        HEIGHT = size.y;
+        //int height = size.y
+        DESPLAZAMIENTO = Float.parseFloat(String.valueOf(WIDTH)) / 3;
     }
 
 
@@ -106,13 +135,10 @@ public class MainActivity extends AppCompatActivity {
             //Ocultamos las vistas principal y guía paginada
             binding.constraintLayout.setVisibility(View.GONE);
             guideBinding.guideLayout.setVisibility(View.GONE);
-
             //Mostramos la vista de la mainGuide
-            guideMainBinding.guideMain.setBackgroundColor(View.VISIBLE);
-
+            guideMainBinding.guideMain.setVisibility(View.VISIBLE);
         }
     }
-
 
     /**
      * Inicializamos la guía en sí. Cada click en la capa cambiará de página
@@ -120,16 +146,26 @@ public class MainActivity extends AppCompatActivity {
     private void initializeGuide(View view) {
         //onClickListener del botón exitGuide
         guideBinding.exitguide.setOnClickListener(this::onExitGuide);
+        guideBinding.guideLayout.setOnClickListener(this::onNextPage);
 
         //Si tenemos algún menú lateral, hay que bloquearlo
 
         //Ocultamos la vista principal y la guía main
-        binding.constraintLayout.setVisibility(View.GONE);
+        binding.constraintLayout.setVisibility(View.VISIBLE);
         guideMainBinding.guideMain.setVisibility(View.GONE);
-
 
         //Ponemos la guía a visible
         guideBinding.guideLayout.setVisibility(View.VISIBLE);
+
+        parpadear();
+
+
+    }
+
+    /**
+     * Parpadeo del circulito
+     */
+    private void parpadear() {
         //Con el object animator creamos unas animaciones
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(
                 guideBinding.pulseImage, "scaleX", 1f, 0.5f);
@@ -152,14 +188,59 @@ public class MainActivity extends AppCompatActivity {
                 if (needToStartGuide) {
                     super.onAnimationEnd(animation);
                     //Abrimos el siguiente binding
-                    guideBinding.pulseImage.setVisibility(View.GONE);
-                    guideBinding.textStep.setVisibility(View.VISIBLE);
+                    //guideBinding.pulseImage.setVisibility(View.GONE);
+                    //guideBinding.textStep.setVisibility(View.VISIBLE);
                     guideBinding.exitguide.setVisibility(View.VISIBLE);
                 }
             }
         });
+    }
 
+    /**
+     * Cada vez que se pulsa la guía, avanza una página
+     * @param view
+     */
+    private void onNextPage(View view) {
 
+         //animation = new ObjectAnimator();
+        //Cambiamos el botón de sitio
+        guideBinding.pulseImage.setVisibility(View.VISIBLE);
+        switch (step){
+            case 1:
+                ObjectAnimator animation = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO);
+                animation.setDuration(2000);
+                animation.start();
+                parpadear();
+                break;
+            case 2:
+                animation = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO * 2) ;
+                animation.setDuration(2000);
+                animation.start();
+                parpadear();
+                break;
+            case 3:
+                ObjectAnimator ejeX = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO * 2);
+                ObjectAnimator ejeY = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationY", - (HEIGHT * 0.85f));
+                //guideBinding.pulseImage.setBackgroundColor(R.color.yellow);
+                //guideBinding.pulseImage.setColorFilter(R.color.yellow);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.play(ejeY).with(ejeX);
+                animatorSet.setDuration(2000);
+                animatorSet.start();
+                parpadear();
+                break;
+            case 4:
+                //Salimos de la guía
+                onExitGuide(view);
+        }
+
+        step++;
+        //Cambiamos el texto
+        guideBinding.textStep.setText("Página " + step);
+
+        //Desplazamos el frame
+
+        //navegamos al siguiente frame
     }
 
     /**
