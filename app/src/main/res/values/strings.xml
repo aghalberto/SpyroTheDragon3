@@ -4,6 +4,10 @@
     <string name="characters">Personajes</string>
     <string name="collectibles">Coleccionables</string>
     <string name="title_about">Acerca de</string>
-    <string name="text_about">Aplicación desarrollada por \n <b>Lindsay Barrero Martínez.</b></string>
+    <string name="text_about">Aplicación desarrollada por \n <b>Alberto García de Haro.</b></string>
     <string name="accept">Aceptar</string>
+    <string name="guide1">Primera página de la guía</string>
+    <string name="saltar">Saltar guía</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="subtitle">Pincha en Spyro para comenzar con la guía</string>
 </resources>
