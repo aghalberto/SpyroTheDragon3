@@ -1,5 +1,6 @@
 package dam.pmdm.spyrothedragon.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import dam.pmdm.spyrothedragon.MultimediaActivity;
 import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.models.Character;
 
@@ -29,12 +31,34 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Ch
 
     @Override
     public void onBindViewHolder(CharactersViewHolder holder, int position) {
+
         Character character = list.get(position);
         holder.nameTextView.setText(character.getName());
+
+        //Listener longkeypressed
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                Character c = list.get(holder.getAdapterPosition());
+                if (c.getName().equals("Spyro")){
+                    easterEggSpyro(v);
+                }
+                return false;
+            }
+        });
 
         // Cargar la imagen (simulado con un recurso drawable)
         int imageResId = holder.itemView.getContext().getResources().getIdentifier(character.getImage(), "drawable", holder.itemView.getContext().getPackageName());
         holder.imageImageView.setImageResource(imageResId);
+    }
+
+    /**
+     * Easter Egg Spyro. Nos llevamos la vista.
+     * @param view
+     */
+    public void easterEggSpyro(View view){
+
     }
 
     @Override

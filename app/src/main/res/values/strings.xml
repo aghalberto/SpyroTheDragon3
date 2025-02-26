@@ -10,4 +10,8 @@
     <string name="saltar">Saltar guía</string>
     <string name="welcome">Bienvenido</string>
     <string name="subtitle">Pincha en Spyro para comenzar con la guía</string>
+    <string name="guide_page1">Aquí podrás explorar a todos los personajes del mundo de Spyro.</string>
+    <string name="guide_page2">Navega por los mundos disponibles.</string>
+    <string name="guide_page3">Los siguientes objetos se pueden encontrar por el juego y coleccionarse, supongo.</string>
+    <string name="guide_page4">Este botón informa sobre la APP</string>
 </resources>

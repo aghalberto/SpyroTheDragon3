@@ -1,6 +1,7 @@
 package dam.pmdm.spyrothedragon;
 
 import static android.view.View.GONE;
+import static android.view.View.inflate;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,6 +10,7 @@ import android.animation.ObjectAnimator;
 
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Display;
@@ -21,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.ActivityNavigator;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -32,7 +35,7 @@ import dam.pmdm.spyrothedragon.databinding.GuideMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private int step = 1;
-    private int WIDTH ;
+    private int WIDTH;
     private int HEIGHT;
     private Float DESPLAZAMIENTO;
     private ActivityMainBinding binding;
@@ -77,28 +80,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Cargamos las preferencias; importante para needToStartGuide
-        cargarPreferencias();
 
         //Calculamos medidas de la pantall
         calcularMedidas();
-        //Inicializamos la guía
+
+        //Cargamos las preferencias; importante para needToStartGuide
+        cargarPreferencias();
+        //Inicializamos la guía si needToStartGuide está a true
         //PARA AHORRAR TIEMPO ponemos el needToStartGuide a true siempre
-        needToStartGuide = true;
+        //needToStartGuide = true;
 
         //Iniciamos la página principal de la guía, tiene un botón que lleva a la guía normal
-        initializeMainGuide();
-
+        if (needToStartGuide) {
+            initializeMainGuide();
+        }
         //initializeGuide();
+    }
 
+    @Override
+    protected void onStart() {
 
+        if (getIntent().getExtras() != null) {
+            String fragment = getIntent().getExtras().getString("fragment");
+            if (fragment != null) {
+                if (fragment.equals("collectibles")) {
+                    binding.navView.setSelectedItemId(R.id.nav_collectibles);
+                }
+            }
+        }
+        super.onStart();
     }
 
     /**
      * Calcula medidas de la pantalla para mover cosas
      * Use WindowMetrics instead.
      * Obtain a WindowMetrics instance by calling WindowManager. getCurrentWindowMetrics(),
-     *  then call WindowMetrics. getBounds() to get the dimensions of the application window.
+     * then call WindowMetrics. getBounds() to get the dimensions of the application window.
      */
     private void calcularMedidas() {
         Point size = new Point();
@@ -126,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
     private void initializeMainGuide() {
         //Ponemos un listener al botón de abrir guía
         guideMainBinding.buttonOpenGuide.setOnClickListener(this::initializeGuide);
+        //Reproducimos un sonido y esperamos
+        reproducir(R.raw.release, true);
+
         if (needToStartGuide) {
             //Si tenemos algún menú lateral, hay que bloquearlo
 
@@ -186,8 +206,9 @@ public class MainActivity extends AppCompatActivity {
                     super.onAnimationEnd(animation);
                     //Abrimos el siguiente binding
                     //guideBinding.pulseImage.setVisibility(View.GONE);
+                    //guideBinding.textStep.setText(R.string.guide_page1);
                     //guideBinding.textStep.setVisibility(View.VISIBLE);
-                    guideBinding.exitguide.setVisibility(View.VISIBLE);
+                    //guideBinding.exitguide.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -195,29 +216,44 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Cada vez que se pulsa la guía, avanza una página
+     *
      * @param view
      */
     private void onNextPage(View view) {
 
-         //animation = new ObjectAnimator();
+        //animation = new ObjectAnimator();
         //Cambiamos el botón de sitio
         guideBinding.pulseImage.setVisibility(View.VISIBLE);
-        switch (step){
+        switch (step) {
+            case 0:
+                break;
+
             case 1:
+                guideBinding.textStep.setVisibility(View.GONE);
                 ObjectAnimator animation = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO);
                 animation.setDuration(2000);
                 animation.start();
                 parpadear();
+                reproducir(R.raw.gem, false);
+                guideBinding.textStep.setText(R.string.guide_page2);
+                guideBinding.textStep.setVisibility(View.VISIBLE);
+                savePageCompleted(1);
                 break;
             case 2:
-                animation = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO * 2) ;
+                guideBinding.textStep.setVisibility(View.GONE);
+                animation = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO * 2);
                 animation.setDuration(2000);
                 animation.start();
                 parpadear();
+                reproducir(R.raw.spyro_sign);
+                guideBinding.textStep.setText(R.string.guide_page3);
+                guideBinding.textStep.setVisibility(View.VISIBLE);
+                savePageCompleted(2);
                 break;
             case 3:
+                guideBinding.textStep.setVisibility(View.GONE);
                 ObjectAnimator ejeX = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO * 2);
-                ObjectAnimator ejeY = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationY", - (HEIGHT * 0.85f));
+                ObjectAnimator ejeY = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationY", -(HEIGHT * 0.85f));
                 //guideBinding.pulseImage.setBackgroundColor(R.color.yellow);
                 //guideBinding.pulseImage.setColorFilter(R.color.yellow);
                 AnimatorSet animatorSet = new AnimatorSet();
@@ -225,19 +261,61 @@ public class MainActivity extends AppCompatActivity {
                 animatorSet.setDuration(2000);
                 animatorSet.start();
                 parpadear();
+                reproducir(R.raw.wizards);
+                guideBinding.textStep.setText(R.string.guide_page4);
+                guideBinding.textStep.setVisibility(View.VISIBLE);
+                savePageCompleted(3);
                 break;
             case 4:
+                guideBinding.textStep.setVisibility(View.GONE);
                 //Salimos de la guía
+                reproducir(R.raw.one_up, true);
+                //Mostramos en el texto las partes completadas de la guía
+                //guideBinding.textStep.setText(R.string.guide_page4);
+                //guideBinding.textStep.setVisibility(View.VISIBLE);
+                savePageCompleted(4);
                 onExitGuide(view);
+                break;
         }
-
+        //Incrementamos el step
         step++;
-        //Cambiamos el texto
-        guideBinding.textStep.setText("Página " + step);
-
         //Desplazamos el frame
 
         //navegamos al siguiente frame
+    }
+
+    /**
+     * Reproduce un audio pasado como R.raw.<<ID>>
+     *
+     * @param audioId ID del Audio en RAW
+     * @param esperar Si está a TRUE, esperamos a que termine de reproducirse
+     */
+    private void reproducir(int audioId, boolean esperar) {
+
+        MediaPlayer mep = MediaPlayer.create(this, audioId);
+        mep.start();
+        if (esperar) {
+            /*
+            try {
+                wait(mep.getDuration());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            */
+
+        }
+    }
+
+    /**
+     * Reproduce un audio pasado como R.raw.<ID></ID>
+     *
+     * @param audioId ID del Audio en RAW
+     */
+    private void reproducir(int audioId) {
+
+        MediaPlayer mep = MediaPlayer.create(this, audioId);
+        mep.start();
+
     }
 
     /**
@@ -274,6 +352,18 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean("needToStartGuide", needToStartGuide);
         editor.apply();
     }
+
+    /**
+     * Cuando completamos una página, la guardamos en sharedPreferences
+     */
+    private void savePageCompleted(int pagina) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String preference = "page" + pagina;
+        editor.putBoolean(preference, true);
+        editor.apply();
+    }
+
 
     private boolean selectedBottomMenu(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.nav_characters)

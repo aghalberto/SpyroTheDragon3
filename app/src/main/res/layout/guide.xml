@@ -20,7 +20,7 @@
         android:id="@+id/textStep"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/guide1"
+        android:text="@string/guide_page1"
         style="@style/guide_textview"
         />
 

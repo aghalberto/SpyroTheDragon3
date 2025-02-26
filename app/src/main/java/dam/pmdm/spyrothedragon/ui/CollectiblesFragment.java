@@ -32,12 +32,15 @@ public class CollectiblesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+
+
         binding = FragmentCollectiblesBinding.inflate(inflater, container, false);
         recyclerView = binding.recyclerViewCollectibles;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         collectiblesList = new ArrayList<>();
         adapter = new CollectiblesAdapter(collectiblesList);
         recyclerView.setAdapter(adapter);
+
 
         loadCollectibles();
         return binding.getRoot();

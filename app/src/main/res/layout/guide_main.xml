@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:clickable="false"
     android:focusable="true"
-    android:visibility="visible"
+    android:visibility="gone"
     >
 
     <TextView
