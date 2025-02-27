@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupActionBarWithNavController(this, navController);
         }
 
+
         binding.navView.setOnItemSelectedListener(this::selectedBottomMenu);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         cargarPreferencias();
         //Inicializamos la guía si needToStartGuide está a true
         //PARA AHORRAR TIEMPO ponemos el needToStartGuide a true siempre
-        //needToStartGuide = true;
+        needToStartGuide = true;
 
         //Iniciamos la página principal de la guía, tiene un botón que lleva a la guía normal
         if (needToStartGuide) {
@@ -146,15 +147,14 @@ public class MainActivity extends AppCompatActivity {
         //Reproducimos un sonido y esperamos
         reproducir(R.raw.release, true);
 
-        if (needToStartGuide) {
-            //Si tenemos algún menú lateral, hay que bloquearlo
+        //Si tenemos algún menú lateral, hay que bloquearlo
 
-            //Ocultamos las vistas principal y guía paginada
-            binding.constraintLayout.setVisibility(View.GONE);
-            guideBinding.guideLayout.setVisibility(View.GONE);
-            //Mostramos la vista de la mainGuide
-            guideMainBinding.guideMain.setVisibility(View.VISIBLE);
-        }
+        //Ocultamos las vistas principal y guía paginada
+        binding.constraintLayout.setVisibility(View.GONE);
+        guideBinding.guideLayout.setVisibility(View.GONE);
+        //Mostramos la vista de la mainGuide
+        guideMainBinding.guideMain.setVisibility(View.VISIBLE);
+
     }
 
     /**
@@ -163,19 +163,22 @@ public class MainActivity extends AppCompatActivity {
     private void initializeGuide(View view) {
         //onClickListener del botón exitGuide
         guideBinding.exitguide.setOnClickListener(this::onExitGuide);
+        //onClickListener de la guía
         guideBinding.guideLayout.setOnClickListener(this::onNextPage);
+        //onClickListener del botón siguiente
+        guideBinding.nextPage.setOnClickListener(this::onNextPage);
 
         //Si tenemos algún menú lateral, hay que bloquearlo
 
-        //Ocultamos la vista principal y la guía main
-        binding.constraintLayout.setVisibility(View.VISIBLE);
+        //Ocultamos la guía main
         guideMainBinding.guideMain.setVisibility(View.GONE);
 
-        //Ponemos la guía a visible
-        guideBinding.guideLayout.setVisibility(View.VISIBLE);
-
+        //Animación
         parpadear();
-
+        //Ponemos la guía a visible
+        binding.constraintLayout.setVisibility(View.VISIBLE);
+        guideBinding.guideLayout.setVisibility(View.VISIBLE);
+        guideBinding.textStep.setVisibility(View.VISIBLE);
 
     }
 
@@ -183,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
      * Parpadeo del circulito
      */
     private void parpadear() {
+        guideBinding.textStep.setVisibility(View.VISIBLE);
+
         //Con el object animator creamos unas animaciones
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(
                 guideBinding.pulseImage, "scaleX", 1f, 0.5f);
@@ -197,21 +202,25 @@ public class MainActivity extends AppCompatActivity {
         scaleY.setRepeatCount(3);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(scaleX).with(scaleY).before(fadeIn);
-        animatorSet.setDuration(1000);
+        animatorSet.setDuration(500);
         animatorSet.start();
+
+
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(@NonNull Animator animation, boolean isReverse) {
-                if (needToStartGuide) {
+                //if (needToStartGuide) {
                     super.onAnimationEnd(animation);
                     //Abrimos el siguiente binding
                     //guideBinding.pulseImage.setVisibility(View.GONE);
                     //guideBinding.textStep.setText(R.string.guide_page1);
-                    //guideBinding.textStep.setVisibility(View.VISIBLE);
+                    guideBinding.textStep.setVisibility(View.VISIBLE);
                     //guideBinding.exitguide.setVisibility(View.VISIBLE);
-                }
+                //}
             }
         });
+
+
     }
 
     /**
@@ -226,8 +235,8 @@ public class MainActivity extends AppCompatActivity {
         guideBinding.pulseImage.setVisibility(View.VISIBLE);
         switch (step) {
             case 0:
+                binding.navView.setSelectedItemId(R.id.nav_characters);
                 break;
-
             case 1:
                 guideBinding.textStep.setVisibility(View.GONE);
                 ObjectAnimator animation = ObjectAnimator.ofFloat(guideBinding.pulseImage, "translationX", DESPLAZAMIENTO);
@@ -238,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                 guideBinding.textStep.setText(R.string.guide_page2);
                 guideBinding.textStep.setVisibility(View.VISIBLE);
                 savePageCompleted(1);
+                binding.navView.setSelectedItemId(R.id.nav_worlds);
                 break;
             case 2:
                 guideBinding.textStep.setVisibility(View.GONE);
@@ -249,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 guideBinding.textStep.setText(R.string.guide_page3);
                 guideBinding.textStep.setVisibility(View.VISIBLE);
                 savePageCompleted(2);
+                binding.navView.setSelectedItemId(R.id.nav_collectibles);
                 break;
             case 3:
                 guideBinding.textStep.setVisibility(View.GONE);
@@ -281,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
         step++;
         //Desplazamos el frame
 
-        //navegamos al siguiente frame
+
     }
 
     /**
