@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/guide_end_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone"
+    >
+
+    <ImageButton
+        android:id="@+id/btn_hide_end_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tooltipText="@string/press_to_hide"
+        android:src="@drawable/spyro" />
+
+    <TextView
+        android:id="@+id/characters_completed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/guide_checklist"
+        android:text="@string/characters" />
+
+    <TextView
+        android:id="@+id/worlds_completed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/guide_checklist"
+        android:text="@string/worlds" />
+
+    <TextView
+        android:id="@+id/collectibles_completed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/guide_checklist"
+        android:text="@string/collectibles" />
+
+    <TextView
+        android:id="@+id/about_completed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/guide_checklist"
+        android:text="@string/about" />
+
+</LinearLayout>

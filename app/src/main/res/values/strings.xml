@@ -15,4 +15,6 @@
     <string name="guide_page3">Los siguientes objetos se pueden encontrar por el juego y coleccionarse, supongo.</string>
     <string name="guide_page4">Este botón informa sobre la APP</string>
     <string name="siguiente">Siguiente</string>
+    <string name="about">Info</string>
+    <string name="press_to_hide">Pincha en Spyro para cerrar</string>
 </resources>

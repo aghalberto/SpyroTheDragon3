@@ -46,8 +46,6 @@ public class MultimediaActivity extends AppCompatActivity {
 
     }
 
-
-
     /**
      * Sale y vuelve al MainActivity
      */

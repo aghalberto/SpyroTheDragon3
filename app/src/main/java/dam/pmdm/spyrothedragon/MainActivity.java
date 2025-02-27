@@ -30,6 +30,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import dam.pmdm.spyrothedragon.databinding.ActivityMainBinding;
 import dam.pmdm.spyrothedragon.databinding.GuideBinding;
+import dam.pmdm.spyrothedragon.databinding.GuideEndBinding;
 import dam.pmdm.spyrothedragon.databinding.GuideMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private GuideBinding guideBinding;
     private GuideMainBinding guideMainBinding;
+    private GuideEndBinding guideEndBinding ;
     private boolean needToStartGuide;
     NavController navController = null;
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         //Instanciamos guideBinding
         guideBinding = binding.includeLayout;
         guideMainBinding = binding.includeMainGuideLayout;
+        guideEndBinding = binding.includeEndGuideLayout;
 
         setContentView(binding.getRoot());
 
@@ -279,6 +282,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 4:
                 guideBinding.textStep.setVisibility(View.GONE);
+                binding.includeLayout.guideLayout.setVisibility(View.GONE);
+                //mostrarLecciones();
+                break;
+            case 5:
+                guideBinding.textStep.setVisibility(View.GONE);
+                binding.constraintLayout.setVisibility(View.GONE);
+                binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.GONE);
                 //Salimos de la guía
                 reproducir(R.raw.one_up, true);
                 //Mostramos en el texto las partes completadas de la guía
@@ -287,12 +297,50 @@ public class MainActivity extends AppCompatActivity {
                 savePageCompleted(4);
                 onExitGuide(view);
                 break;
+
         }
         //Incrementamos el step
         step++;
         //Desplazamos el frame
 
 
+    }
+
+    /**
+     * Al salir de la guía se resaltan las lecciones aprendidas, poniendo el alpha a 1.
+     */
+    private void mostrarLecciones() {
+        binding.constraintLayout.setVisibility(View.GONE);
+        binding.navHostFragment.setVisibility(View.GONE);
+        binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.VISIBLE);
+        guideEndBinding.guideEndLayout.setOnClickListener(this::hideEndGuide);
+        guideEndBinding.btnHideEndGuide.setOnClickListener(this::hideEndGuide);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Recuperamos las lecciones guardadas (por defecto a false)
+        boolean page1 = sharedPreferences.getBoolean("page1", false);
+        boolean page2 = sharedPreferences.getBoolean("page2", false);
+        boolean page3 = sharedPreferences.getBoolean("page3", false);
+        boolean page4 = sharedPreferences.getBoolean("page4", false);
+        //Vamos cambiando el alpha/style de cada textview
+        if (page1)
+            guideEndBinding.charactersCompleted.setAlpha(1);
+        if (page2)
+            guideEndBinding.worldsCompleted.setAlpha(1);
+        if (page3)
+            guideEndBinding.collectiblesCompleted.setAlpha(1);
+        if (page4)
+            guideEndBinding.aboutCompleted.setAlpha(1);
+
+    }
+
+    /**
+     * Oculta la última página de la guía
+     * @param view
+     */
+    private void hideEndGuide(View view) {
+        binding.includeEndGuideLayout.guideEndLayout.setVisibility(GONE);
+        binding.navHostFragment.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -339,12 +387,13 @@ public class MainActivity extends AppCompatActivity {
         saveNeedToStartPreference(false);
 
         //Bloquearíamos el menú lateral. Como no hay pues no se bloquea
-
+        //mostrarLecciones();
         //Volvemos a mostrar el constraintLayout
         binding.constraintLayout.setVisibility(View.VISIBLE);
 
         //Ocultamos la vista de la guía
         guideBinding.guideLayout.setVisibility(GONE);
+        //binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.VISIBLE);
 
         //Cerraríamos el menú lateral de existir
 
