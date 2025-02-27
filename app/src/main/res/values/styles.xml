@@ -11,11 +11,14 @@
     </style>
 
     <style name="guide_textview">
+        <item name="layout_constraintStart_toStartOf">@id/pulseImage</item>
+        <item name="layout_constraintBottom_toTopOf">@id/pulseImage</item>
+        <item name="layout_constraintTop_toTopOf">@id/pulseImage</item>
         <item name="android:background">@drawable/button_normal</item>
         <item name="android:layout_margin">50dp</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:layout_gravity">bottom</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:layout_gravity">center</item>
         <item name="android:maxLines">5</item>
         <item name="android:padding">20dp</item>
         <item name="android:textSize">@dimen/text_guide_line</item>
@@ -24,12 +27,23 @@
     </style>
 
     <style name="guide_button">
-        <item name="android:layout_gravity">right|bottom</item>
+        <item name="android:layout_gravity">left|top</item>
         <item name="android:layout_margin">20dp</item>
         <item name="android:layout_marginBottom">60dp</item>
         <item name="android:padding">20dp</item>
         <item name="android:textSize">20dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="guide_button_next">
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:layout_marginBottom">60dp</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:backdropColor">@color/purple</item>
         <item name="android:textColor">@color/white</item>
     </style>
 

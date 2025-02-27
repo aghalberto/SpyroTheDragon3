@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:id="@+id/guideLayout"
-    android:visibility="gone"
+
     >
 
     <ImageView
@@ -18,10 +18,18 @@
 
     <TextView
         android:id="@+id/textStep"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/guide_page1"
         style="@style/guide_textview"
+        />
+
+    <android.widget.Button
+        android:id="@+id/next_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/siguiente"
+        style="@style/guide_button_next"
         />
 
     <android.widget.Button
