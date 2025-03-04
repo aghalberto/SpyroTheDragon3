@@ -12,4 +12,4 @@ El EasterEgg de spyro con Canvas se abre en un nuevo activity. No le veo la grac
 Cuando termina el EasterEgg del vídeo, se abre directamente el Fragment "Collectibles"
 
 # TO-DO
-- Página al salir de la guía con las páginas leídas (pueden no ser todas)
+
