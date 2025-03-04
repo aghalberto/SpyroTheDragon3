@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         cargarPreferencias();
         //Inicializamos la guía si needToStartGuide está a true
         //PARA AHORRAR TIEMPO ponemos el needToStartGuide a true siempre
-        needToStartGuide = true;
+        //needToStartGuide = true;
 
         //Iniciamos la página principal de la guía, tiene un botón que lleva a la guía normal
         if (needToStartGuide) {

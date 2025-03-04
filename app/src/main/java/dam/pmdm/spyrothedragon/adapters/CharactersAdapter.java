@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import dam.pmdm.spyrothedragon.CanvasActivity;
 import dam.pmdm.spyrothedragon.MultimediaActivity;
 import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.models.Character;
@@ -58,7 +59,8 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Ch
      * @param view
      */
     public void easterEggSpyro(View view){
-
+        Intent intent = new Intent (view.getContext(), CanvasActivity.class);
+        view.getContext().startActivity(intent);
     }
 
     @Override
