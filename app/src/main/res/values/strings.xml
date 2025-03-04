@@ -16,5 +16,6 @@
     <string name="guide_page4">Este botón informa sobre la APP</string>
     <string name="siguiente">Siguiente</string>
     <string name="about">Info</string>
-    <string name="press_to_hide">Pincha en Spyro para cerrar</string>
+    <string name="press_to_hide">Pulsa para cerrar</string>
+    <string name="pages_completed">Partes completadas</string>
 </resources>

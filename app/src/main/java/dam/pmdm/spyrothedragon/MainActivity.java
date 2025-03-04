@@ -61,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
+        binding.includeEndGuideLayout.btnHideEndGuide.setOnClickListener(v -> {
+            binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.GONE);
+            binding.constraintLayout.setVisibility(View.VISIBLE);
+            binding.navHostFragment.setVisibility(View.VISIBLE);
+            binding.navView.setVisibility(View.VISIBLE);
+        });
+
 
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
         if (navHostFragment != null) {
@@ -91,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         //Cargamos las preferencias; importante para needToStartGuide
         cargarPreferencias();
         //Inicializamos la guía si needToStartGuide está a true
-        //PARA AHORRAR TIEMPO ponemos el needToStartGuide a true siempre
+        //DEBUG: PARA AHORRAR TIEMPO ponemos el needToStartGuide a true siempre
         //needToStartGuide = true;
 
         //Iniciamos la página principal de la guía, tiene un botón que lleva a la guía normal
@@ -208,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
         animatorSet.setDuration(500);
         animatorSet.start();
 
-
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(@NonNull Animator animation, boolean isReverse) {
@@ -239,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         switch (step) {
             case 0:
                 binding.navView.setSelectedItemId(R.id.nav_characters);
+                savePageCompleted(1);
                 break;
             case 1:
                 guideBinding.textStep.setVisibility(View.GONE);
@@ -249,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 reproducir(R.raw.gem, false);
                 guideBinding.textStep.setText(R.string.guide_page2);
                 guideBinding.textStep.setVisibility(View.VISIBLE);
-                savePageCompleted(1);
+                savePageCompleted(2);
                 binding.navView.setSelectedItemId(R.id.nav_worlds);
                 break;
             case 2:
@@ -261,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 reproducir(R.raw.spyro_sign);
                 guideBinding.textStep.setText(R.string.guide_page3);
                 guideBinding.textStep.setVisibility(View.VISIBLE);
-                savePageCompleted(2);
+                savePageCompleted(3);
                 binding.navView.setSelectedItemId(R.id.nav_collectibles);
                 break;
             case 3:
@@ -278,12 +285,21 @@ public class MainActivity extends AppCompatActivity {
                 reproducir(R.raw.wizards);
                 guideBinding.textStep.setText(R.string.guide_page4);
                 guideBinding.textStep.setVisibility(View.VISIBLE);
-                savePageCompleted(3);
+                savePageCompleted(4);
                 break;
             case 4:
                 guideBinding.textStep.setVisibility(View.GONE);
                 binding.includeLayout.guideLayout.setVisibility(View.GONE);
                 //mostrarLecciones();
+                binding.constraintLayout.setVisibility(View.GONE);
+                binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.GONE);
+                //Salimos de la guía
+                reproducir(R.raw.one_up, true);
+                //Mostramos en el texto las partes completadas de la guía
+                //guideBinding.textStep.setText(R.string.guide_page4);
+                //guideBinding.textStep.setVisibility(View.VISIBLE);
+                savePageCompleted(4);
+                onExitGuide(view);
                 break;
             case 5:
                 guideBinding.textStep.setVisibility(View.GONE);
@@ -294,7 +310,6 @@ public class MainActivity extends AppCompatActivity {
                 //Mostramos en el texto las partes completadas de la guía
                 //guideBinding.textStep.setText(R.string.guide_page4);
                 //guideBinding.textStep.setVisibility(View.VISIBLE);
-                savePageCompleted(4);
                 onExitGuide(view);
                 break;
 
@@ -340,6 +355,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void hideEndGuide(View view) {
         binding.includeEndGuideLayout.guideEndLayout.setVisibility(GONE);
+        binding.constraintLayout.setVisibility(View.VISIBLE);
+        binding.navHostFragment.setVisibility(View.VISIBLE);
         binding.navHostFragment.setVisibility(View.VISIBLE);
     }
 
@@ -383,20 +400,24 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     private void onExitGuide(View view) {
+        //Al pinchar en cerrar el resumen, restauramos visibilidades
+        binding.includeEndGuideLayout.btnHideEndGuide.setOnClickListener(v -> {
+            binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.GONE);
+            binding.constraintLayout.setVisibility(View.VISIBLE);
+            binding.navHostFragment.setVisibility(View.VISIBLE);
+            binding.navView.setVisibility(View.VISIBLE);
+        });
+
         //Guardamos needToStartGuide en sharedPreferences y lo cambiamos
         saveNeedToStartPreference(false);
 
-        //Bloquearíamos el menú lateral. Como no hay pues no se bloquea
-        //mostrarLecciones();
-        //Volvemos a mostrar el constraintLayout
-        binding.constraintLayout.setVisibility(View.VISIBLE);
-
         //Ocultamos la vista de la guía
         guideBinding.guideLayout.setVisibility(GONE);
-        //binding.includeEndGuideLayout.guideEndLayout.setVisibility(View.VISIBLE);
 
-        //Cerraríamos el menú lateral de existir
+        //Bloquearíamos el menú lateral. Como no hay pues no se bloquea
+        //Mostramos las lecciones
 
+        mostrarLecciones();
 
     }
 

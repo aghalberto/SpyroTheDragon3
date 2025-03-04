@@ -7,17 +7,15 @@
     android:padding="10dp"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    android:clickable="true"
-    android:focusable="true"
     android:visibility="gone"
     >
 
-    <ImageButton
-        android:id="@+id/btn_hide_end_guide"
+    <TextView
+        android:id="@+id/pages_completed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tooltipText="@string/press_to_hide"
-        android:src="@drawable/spyro" />
+        style="@style/guide_textwelcome"
+        android:text="@string/pages_completed" />
 
     <TextView
         android:id="@+id/characters_completed"
@@ -46,5 +44,13 @@
         android:layout_height="wrap_content"
         style="@style/guide_checklist"
         android:text="@string/about" />
+
+    <Button
+        android:id="@+id/btn_hide_end_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/press_to_hide" />
+
+
 
 </LinearLayout>
